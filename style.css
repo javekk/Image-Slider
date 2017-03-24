@@ -1,0 +1,22 @@
+.pics{
+    display: inline;
+    height: auto;
+    width: 100%;
+    max-height: 450px;
+    max-width: 100%;
+}
+
+.carousel{
+    max-width: 100%;
+    max-height: 450px;
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+    z-index: 1;
+    display: block; 
+    white-space: nowrap;  
+    border-style: solid;
+    border-color: black;
+    font-size: 0;
+    padding: 0px;
+}
