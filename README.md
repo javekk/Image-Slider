@@ -1,4 +1,4 @@
-# Image-Slider
+# Image-Slider WIP
 jQuery Image slider
 
 html-js-jQuery-Bootstrap image slider 
