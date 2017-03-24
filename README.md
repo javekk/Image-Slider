@@ -1,8 +1,9 @@
 # Image-Slider
-## jQuery Image slider
+jQuery Image slider
 
 html-js-jQuery-Bootstrap image slider 
-Implements using with **MVC** framework
+
+Implements using **MVC** framework
 
 requirements:
 * Responsive ☑
