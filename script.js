@@ -138,14 +138,14 @@ var view = {
         var $leftArrow = $('#leftArrow');
         $leftArrow.css('top', '40%');
         $leftArrow.css('bottom', '60%');
-        $leftArrow.css('padding-left', 22);
-        $leftArrow.css('color', "black" );
+        $leftArrow.css('text-align', 'right');
+        $leftArrow.css('color', 'red' );
         
         /*add the LABELS*/
         $upperRow.append('<div class="over jumbotron col-md-10 col-xs-10 col-md-offset-1 col-xs-offset-1" id="labelContainer"></div>');
         var $labelContainer = $('#labelContainer');
         $labelContainer.css('bottom', -20 ); 
-        $labelContainer.css('color', "black" ); 
+        $labelContainer.css('color', 'red' ); 
         $labelContainer.append('<h1 id="title">' + controller.get_title(0) + '</h1>');
         $labelContainer.append('<p id="description">' + controller.get_description(0) + '</p>');
         
@@ -154,8 +154,8 @@ var view = {
         var $rightArrow = $('#rightArrow');
         $rightArrow.css('top', '40%');
         $rightArrow.css('bottom', '60%');
-        $rightArrow.css('padding-right', 22);
-        $rightArrow.css('color', "black" );
+        $rightArrow.css('text-align','left');
+        $rightArrow.css('color', 'red' );
         
         /*let's animate*/
         view.animate();
