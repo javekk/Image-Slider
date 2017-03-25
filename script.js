@@ -4,23 +4,23 @@
 
 var imgs = [
     {
-        title : "1" ,
-        description : "an image" ,
+        title : "narnia" ,
+        description : "A great man with same thing" ,
         src : "img/img-1.jpg"
     } ,
     {
-        title : "2" ,
-        description : "an image" ,
+        title : "xanax" ,
+        description : "aSupposta" ,
         src : "img/img-2.jpg"
     } ,
     {
         title : "3" ,
-        description : "an image" ,
+        description : "Orpo" ,
         src : "img/img-3.jpg"
     } ,
     {
         title : "4" ,
-        description : "an image" ,
+        description : "non mi ricordi più il mare" ,
         src : "img/img-4.jpg"
     } ,
     {
@@ -29,8 +29,8 @@ var imgs = [
         src : "img/img-5.jpg"
     } ,
     {
-        title : "1" ,
-        description : "an image" ,
+        title : "narnia" ,
+        description : "A great man with same thing" ,
         src : "img/img-1.jpg"
     } ,
 ];
@@ -43,7 +43,7 @@ var model = {
     
     /* slider dimensions, set in the init function, we use BOOTSTRAP for responsive dims, so this type is string
        @TODO: choose one here -> http://getbootstrap.com/css/#grid-options, we use full-screen */
-    sl_class_dim : "col-md-12 col-xs-12",
+    sl_class_dim : "col-md-6 col-xs-6 col-md-offset-3",
     
     /*set in the init function*/
     imgsNumber : 0 ,
@@ -77,9 +77,26 @@ var view = {
     init : function() {
         
         var $slider = $('.carousel');
+        var $sliderContainer = $('.carouselContainer');
         var numberOfImages = imgs.length;
         
-        $slider.addClass(controller.get_slider_dims_class);
+        /*get the size of our slider*/
+        $sliderContainer.addClass(controller.get_slider_dims_class);
+        
+        /*Insert labels for title and description containers with is position 
+         * insert label like MAtrioska:
+         * SLIDERCONTAINER -> SLIDER -> IMAGES
+         *                \-> LABELCONTAINER(over) -> title
+         *                                        \-> description 
+         */
+        $sliderContainer.append('<div class="over jumbotron col-md-11 col-xs-11" id="labelContainer">');
+        var $labelContainer = $('#labelContainer');
+        $labelContainer.css('left', 20 ); 
+        $labelContainer.css('bottom', -50 ); 
+        $labelContainer.css('color', "black" ); 
+        
+        $labelContainer.append('<h1 id="title">TITLE</h1>');
+        $labelContainer.append('<p id="description">DESCRIPTION</p>');
         
         /*add imgs in the carousel*/
         for(var i = 0; i < numberOfImages; i++){
@@ -90,6 +107,7 @@ var view = {
             $slider.append('<img class="pics" id="' + i + '-sort" src="' + imgs[i].src+ '">');
         }
         
+        /*let's animate*/
         view.animate();
     } ,
     
@@ -102,7 +120,7 @@ var view = {
          * - move the first image to the left of its width, moving in turn all block of images
          * - now the first one is hide, and the second one is visible
          * - go on with the same on second image and so on 
-         * - if the last photo position is  visible (we check that in that way: if its left position is back than the window size / 2) 
+         * - if the last photo position is  visible (we check that in that way: if its left position is equal to the left position of slider) 
          *    move the first photo to the initial position 
          * - how do on resize? -> stop animation! 
          */
@@ -120,12 +138,12 @@ var view = {
         var lastPosLeft = $lastSort.position().left;
         
         /*get the current window width*/
-        var windowWidth = $(window).width();
+        var sliderLeftPosition = $('.carousel').position().left;
         
-        /*if the last photo is visible*/
-        if(lastPosLeft < windowWidth / 2){
+        /*if the last photo is visible with 15px of accuration*/
+        if(lastPosLeft < sliderLeftPosition + 15){
             /*move, without animate, the first image to the initial position*/
-            $fistSort.css('margin-left', 0 ) ;                 
+            $fistSort.css('margin-left', 0 );                 
         }
         
         /*on resize*/
@@ -139,7 +157,7 @@ var view = {
             
             /*stop animation*/
             $fistSort.stop();
-            /*move, without animate, the first image to the initial position to aovid bad things*/
+            /*move, without animate, the first image to the initial position to avoid bad things*/
             $fistSort.css('margin-left', 0 );
         });
         
