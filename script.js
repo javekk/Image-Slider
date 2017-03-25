@@ -43,13 +43,25 @@ var model = {
     
     /* slider dimensions, set in the init function, we use BOOTSTRAP for responsive dims, so this type is string
        @TODO: choose one here -> http://getbootstrap.com/css/#grid-options, we use full-screen */
-    sl_class_dim : "col-md-6 col-xs-6 col-md-offset-3",
+    slClassSize: "col-md-6 col-xs-6 col-md-offset-3",
     
     /*set in the init function*/
     imgsNumber : 0 ,
 
     init : function(){
         this.imgsNumber = imgs.length;
+    } ,
+    
+    get_src : function(numberOfImg){
+        return imgs[numberOfImg].src;
+    } ,
+    
+    get_title : function(numberOfImg){
+        return imgs[numberOfImg].title;
+    } ,
+    
+    get_description : function(numberOfImg){
+        return imgs[numberOfImg].description;
     }
 }
 
@@ -61,11 +73,27 @@ var controller = {
     } ,
     
     get_slider_dims_class : function (){
-        return model.sl_class_dim;
+        return model.slClassSize;
     } ,
     
     get_timer : function(){
         return model.timer;
+    } ,
+    
+    get_src : function(numberOfImg){
+        return model.get_src(numberOfImg);
+    } ,
+    
+    get_title : function(numberOfImg){
+        return model.get_title(numberOfImg);
+    } ,
+    
+    get_description : function(numberOfImg){
+        return model.get_description(numberOfImg);
+    } ,
+    
+    get_image_number(){
+        return model.imgsNumber;
     }
 }
 
@@ -84,10 +112,11 @@ var view = {
         $sliderContainer.addClass(controller.get_slider_dims_class);
         
         /*Insert labels for title and description containers with is position 
-         * insert label like MAtrioska:
+         * insert label this is tree:
          * SLIDERCONTAINER -> SLIDER -> IMAGES
          *                \-> LABELCONTAINER(over) -> title
          *                                        \-> description 
+         * here we create label container with is css, and add decription of first photos
          */
         $sliderContainer.append('<div class="over jumbotron col-md-11 col-xs-11" id="labelContainer">');
         var $labelContainer = $('#labelContainer');
@@ -95,8 +124,8 @@ var view = {
         $labelContainer.css('bottom', -50 ); 
         $labelContainer.css('color', "black" ); 
         
-        $labelContainer.append('<h1 id="title">TITLE</h1>');
-        $labelContainer.append('<p id="description">DESCRIPTION</p>');
+        $labelContainer.append('<h1 id="title">' + controller.get_title(0) + '</h1>');
+        $labelContainer.append('<p id="description">' + controller.get_description(0) + '</p>');
         
         /*add imgs in the carousel*/
         for(var i = 0; i < numberOfImages; i++){
@@ -104,7 +133,7 @@ var view = {
              * -class -> pics
              * -id -> # + sort 
              * src */
-            $slider.append('<img class="pics" id="' + i + '-sort" src="' + imgs[i].src+ '">');
+            $slider.append('<img class="pics" id="' + i + '-sort" src="' + controller.get_src(i) + '">');
         }
         
         /*let's animate*/
@@ -128,11 +157,11 @@ var view = {
         var numberOfImages = imgs.length;
         
         /*get first and last image */
-        var $fistSort = $('#0-sort');
+        var $firstSort = $('#0-sort');
         var $lastSort = $('#' + (numberOfImages-1) + '-sort');
         
         /*get the current lenght of slider, the same of images*/
-        var lenghtOfSlider = $fistSort.width();
+        var lenghtOfSlider = $firstSort.width();
         
         /*get the current position of the last photo*/
         var lastPosLeft = $lastSort.position().left;
@@ -143,7 +172,7 @@ var view = {
         /*if the last photo is visible with 15px of accuration*/
         if(lastPosLeft < sliderLeftPosition + 15){
             /*move, without animate, the first image to the initial position*/
-            $fistSort.css('margin-left', 0 );                 
+            $firstSort.css('margin-left', 0 );                 
         }
         
         /*on resize*/
@@ -156,17 +185,54 @@ var view = {
             }, 250);
             
             /*stop animation*/
-            $fistSort.stop();
+            $firstSort.stop();
             /*move, without animate, the first image to the initial position to avoid bad things*/
-            $fistSort.css('margin-left', 0 );
+            $firstSort.css('margin-left', 0 );
+            
+            /*adapt the title and description label for current image*/
+            view.adaptLabelContainer(lastPosLeft, lenghtOfSlider);
         });
         
         /*wait before animate*/
-        $fistSort.delay(controller.get_timer());
+        $firstSort.delay(controller.get_timer());
         /*finally animate*/
-        $fistSort.animate({marginLeft:"-=" + lenghtOfSlider }, "med", view.animate);
+        $firstSort.animate({marginLeft:"-=" + lenghtOfSlider }, "med", view.animate);
+        
+        /*adapt the title and description label for current image*/
+        view.adaptLabelContainer(lastPosLeft, lenghtOfSlider);
      
-    } 
+    } ,
+    
+    adaptLabelContainer : function (lastPosLeft, lenghtOfSlider){
+        var totalLenght = controller.get_image_number() * lenghtOfSlider;
+        var $title = $('#title');
+        var $description = $('#description');
+        
+        /* we have this:
+         *  
+         *               <- ⬛⬜⬜⬜⬜⬜⬜ 1 photo displayed
+         *                 ⬜⬛⬜⬜⬜⬜⬜  2 photo displayed
+         *                ⬜⬜⬛⬜⬜⬜⬜   3 photo displayed
+         *
+         * Y = marginLeft of last image
+         * T = total lenght of images block 
+         * t = image lenght
+         * X = current image dysplayed
+         *
+         * FLOW: first image is displayed  (1) -> Y = T - (t * 1)
+         *       second image is displayed (2) -> Y = T - (t * 2)
+         *          .   .   .   .   .   .
+         *       x-th image is displayed   (X) -> Y = T - (t * X)
+         *
+         *       SO ⤇ [X = (T-Y)/t] 
+         *       (-1? -> Array....)
+         **/
+        var currentImage = (( totalLenght - lastPosLeft ) / lenghtOfSlider) - 1;
+        
+        $title.text(controller.get_title(currentImage));
+        $description.text(controller.get_description(currentImage));
+        
+    }
 }
 
 
