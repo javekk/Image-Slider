@@ -42,8 +42,8 @@ var model = {
     timer : 2000 ,
     
     /* slider dimensions, set in the init function, we use BOOTSTRAP for responsive dims, so this type is string
-       @TODO: choose one here -> http://getbootstrap.com/css/#grid-options, we use full-screen */
-    slClassSize: "col-md-6 col-xs-6 col-md-offset-3",
+     *   @TODO: choose one here -> http://getbootstrap.com/css/#grid-options, we use full-screen */
+    slClassSize: "col-md-6 col-xs-12 col-md-offset-3",
     
     /*set in the init function*/
     imgsNumber : 0 ,
@@ -100,9 +100,18 @@ var controller = {
 /*----------------------------------------VIEW----------------------------------------*/
 var view = {
     
-    flag : true ,
-    
     init : function() {
+        
+        /*Insert labels for title and description containers with is position 
+         *
+         * this is our tree:
+         * SLIDERCONTAINER ┬-> SLIDER -> IMAGES
+         *                 └-> upperRow ┬-> arrow l
+         *                              ├-> labels
+         *                              └-> arrow r
+         * here we create label container with is css, and add decription of first photos
+         */
+        
         
         var $slider = $('.carousel');
         var $sliderContainer = $('.carouselContainer');
@@ -111,23 +120,7 @@ var view = {
         /*get the size of our slider*/
         $sliderContainer.addClass(controller.get_slider_dims_class);
         
-        /*Insert labels for title and description containers with is position 
-         * insert label this is tree:
-         * SLIDERCONTAINER -> SLIDER -> IMAGES
-         *                \-> LABELCONTAINER(over) -> title
-         *                                        \-> description 
-         * here we create label container with is css, and add decription of first photos
-         */
-        $sliderContainer.append('<div class="over jumbotron col-md-11 col-xs-11" id="labelContainer">');
-        var $labelContainer = $('#labelContainer');
-        $labelContainer.css('left', 20 ); 
-        $labelContainer.css('bottom', -50 ); 
-        $labelContainer.css('color', "black" ); 
-        
-        $labelContainer.append('<h1 id="title">' + controller.get_title(0) + '</h1>');
-        $labelContainer.append('<p id="description">' + controller.get_description(0) + '</p>');
-        
-        /*add imgs in the carousel*/
+        /*add IMGS in the carousel*/
         for(var i = 0; i < numberOfImages; i++){
             /*add with three specs:
              * -class -> pics
@@ -136,9 +129,38 @@ var view = {
             $slider.append('<img class="pics" id="' + i + '-sort" src="' + controller.get_src(i) + '">');
         }
         
+        
+        $sliderContainer.append('<div class="row" id="upperRow"></div>');
+        var $upperRow = $('#upperRow');
+        
+        /*add the LEFT ARROW*/
+        $upperRow.append('<div class="over col-md-1 col-xs-1" id="leftArrow"><h2>◀</h2></div> ');
+        var $leftArrow = $('#leftArrow');
+        $leftArrow.css('top', '40%');
+        $leftArrow.css('bottom', '60%');
+        $leftArrow.css('padding-left', 22);
+        $leftArrow.css('color', "black" );
+        
+        /*add the LABELS*/
+        $upperRow.append('<div class="over jumbotron col-md-10 col-xs-10 col-md-offset-1 col-xs-offset-1" id="labelContainer"></div>');
+        var $labelContainer = $('#labelContainer');
+        $labelContainer.css('bottom', -20 ); 
+        $labelContainer.css('color', "black" ); 
+        $labelContainer.append('<h1 id="title">' + controller.get_title(0) + '</h1>');
+        $labelContainer.append('<p id="description">' + controller.get_description(0) + '</p>');
+        
+        /*add the RIGHT ARROW*/
+        $upperRow.append('<div class="over col-md-1 col-xs-1 col-md-offset-11 col-xs-offset-11" id="rightArrow"><h2>▶</h2S></div>');
+        var $rightArrow = $('#rightArrow');
+        $rightArrow.css('top', '40%');
+        $rightArrow.css('bottom', '60%');
+        $rightArrow.css('padding-right', 22);
+        $rightArrow.css('color', "black" );
+        
         /*let's animate*/
         view.animate();
     } ,
+    
     
     animate : function () {
         
@@ -182,7 +204,7 @@ var view = {
             clearTimeout(window.resizedFinished);
             window.resizedFinished = setTimeout(function(){
                 view.animate();
-            }, 250);
+            }, 50);
             
             /*stop animation*/
             $firstSort.stop();
@@ -190,29 +212,40 @@ var view = {
             $firstSort.css('margin-left', 0 );
             
             /*adapt the title and description label for current image*/
-            view.adaptLabelContainer(lastPosLeft, lenghtOfSlider);
+            view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lenghtOfSlider));
         });
         
         /*wait before animate*/
         $firstSort.delay(controller.get_timer());
         /*finally animate*/
-        $firstSort.animate({marginLeft:"-=" + lenghtOfSlider }, "med", view.animate);
+        $firstSort.animate({marginLeft: "-=" + lenghtOfSlider}, "med", view.animate);
         
         /*adapt the title and description label for current image*/
-        view.adaptLabelContainer(lastPosLeft, lenghtOfSlider);
+        view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lenghtOfSlider));
      
     } ,
     
-    adaptLabelContainer : function (lastPosLeft, lenghtOfSlider){
-        var totalLenght = controller.get_image_number() * lenghtOfSlider;
+    
+    adaptLabelContainer : function (currentImage){
+        
         var $title = $('#title');
         var $description = $('#description');
         
-        /* we have this:
+        $title.text(controller.get_title(currentImage));
+        $description.text(controller.get_description(currentImage));
+        
+    } ,
+    
+    
+    getCurrentImage : function (lastPosLeft, lenghtOfSlider) {
+        
+        var totalLenght = controller.get_image_number() * lenghtOfSlider;
+        
+         /* we have this:
          *  
-         *               <- ⬛⬜⬜⬜⬜⬜⬜ 1 photo displayed
-         *                 ⬜⬛⬜⬜⬜⬜⬜  2 photo displayed
-         *                ⬜⬜⬛⬜⬜⬜⬜   3 photo displayed
+         *               <- ⬛⬜⬜⬜⬜⬜⬜ 1st photo displayed
+         *                 ⬜⬛⬜⬜⬜⬜⬜  2nd photo displayed
+         *                ⬜⬜⬛⬜⬜⬜⬜   3rd photo displayed
          *
          * Y = marginLeft of last image
          * T = total lenght of images block 
@@ -229,10 +262,10 @@ var view = {
          **/
         var currentImage = (( totalLenght - lastPosLeft ) / lenghtOfSlider) - 1;
         
-        $title.text(controller.get_title(currentImage));
-        $description.text(controller.get_description(currentImage));
-        
+        return currentImage;
     }
+    
+    
 }
 
 
