@@ -8,5 +8,6 @@ Implements using **MVC** framework
 requirements:
 * Responsive ☑
 * Arbitrary number of images ☑
+* labels ☑
 * Skip left/right bottons
 * Choosen image bottons
