@@ -264,8 +264,10 @@ var view = {
              *for stop animation when resize is checked*/
             clearTimeout(window.resizedFinished);
             window.resizedFinished = setTimeout(function(){
+                view.isItOkToAnimate = true;
+                view.isJustClicked = false;
                 view.animateCarousel();
-            }, 50);
+            }, 500);
             
             /*stop animation*/
             $firstSort.stop();
