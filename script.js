@@ -100,6 +100,14 @@ var controller = {
 /*----------------------------------------VIEW----------------------------------------*/
 var view = {
     
+    /*FLAGS*/
+    isItOkToAnimate : true ,
+    isJustClicked : false,
+    
+    /*this is the object that managed the animation*/
+    $firstSort : null ,
+    
+    
     init : function() {
         
         /*Insert labels for title and description containers with is position 
@@ -133,15 +141,25 @@ var view = {
         $sliderContainer.append('<div class="row" id="upperRow"></div>');
         var $upperRow = $('#upperRow');
         
-        /*add the LEFT ARROW*/
-        $upperRow.append('<div class="over col-md-1 col-xs-1" id="leftArrow"><h2>◀</h2></div> ');
+        /*add the -----LEFT ARROW----- and its onClick function*/
+        $upperRow.append('<div class="over col-md-1 col-xs-1" id="leftArrow"><h1 class="btn">◀</h1></div> ');
         var $leftArrow = $('#leftArrow');
         $leftArrow.css('top', '40%');
         $leftArrow.css('bottom', '60%');
         $leftArrow.css('text-align', 'right');
         $leftArrow.css('color', 'red' );
         
-        /*add the LABELS*/
+        /*-------onClick left button------, first i check if I can do that, 
+         * if I CAN'T is because the traslation is in progress,
+         * if I CAN is because the delay time is in progress*/
+        $leftArrow.click(function(){
+            if(!view.isItOkToAnimate) {
+                return;
+            }
+            view.onClickArrow('l');
+        });
+        
+        /*add the -----LABELS------*/
         $upperRow.append('<div class="over jumbotron col-md-10 col-xs-10 col-md-offset-1 col-xs-offset-1" id="labelContainer"></div>');
         var $labelContainer = $('#labelContainer');
         $labelContainer.css('bottom', -20 ); 
@@ -149,8 +167,8 @@ var view = {
         $labelContainer.append('<h1 id="title">' + controller.get_title(0) + '</h1>');
         $labelContainer.append('<p id="description">' + controller.get_description(0) + '</p>');
         
-        /*add the RIGHT ARROW*/
-        $upperRow.append('<div class="over col-md-1 col-xs-1 col-md-offset-11 col-xs-offset-11" id="rightArrow"><h2>▶</h2S></div>');
+        /*add the ------RIGHT ARROW------ and its onClick function*/
+        $upperRow.append('<div class="over col-md-1 col-xs-1 col-md-offset-11 col-xs-offset-11" id="rightArrow"><h2 class="btn">▶</h2S></div>');
         var $rightArrow = $('#rightArrow');
         $rightArrow.css('top', '40%');
         $rightArrow.css('bottom', '60%');
@@ -158,15 +176,49 @@ var view = {
         $rightArrow.css('color', 'red' );
         
         /*let's animate*/
-        view.animate();
+        view.animateCarousel();
     } ,
     
     
-    animate : function () {
+    onClickArrow : function(direction){
         
         /*ALGORITH with words: 
-         * - images are in order horizontally in a long block like this -> □□□□□□□□□□
-         * - we can see only one photo at a time
+         * - check if I just clicked
+         * - set the flags that I just clicked ì
+         * -  
+         * - LEFT CASE: easy, stop the animation, stop() function allow animateCarousel function finish and so DO THE LAST TRANSITION(we are in
+         *   the delay time,we CAN'T call this function in the traslation time) that is after the delay time in our implemetation. 
+         *   So we use that transition as our trasition left
+         */
+        
+        if(view.isJustClicked){
+            return;
+        }
+        
+        view.isJustClicked = true;
+        
+        view.$firstSort = $('#0-sort');
+        var $firstSort = view.$firstSort;
+        
+        //view.isItOkToAnimate = false; 
+        /* so we must set the flag to false*/
+        $firstSort.stop();
+        
+        /*left case*/
+        if(direction == 'l'){
+            /*just re-animate*/         
+            view.isItOkToAnimate = true; 
+            view.animateCarousel();
+        }    
+    } ,
+    
+    
+    animateCarousel : function () {
+        
+        /*ALGORITH with words: 
+         * - first of all we must check if we can animate, the flag isItOkToAminate
+         * - images are in order horizontally in a long block like this -> ⬜⬜⬜⬜⬜⬜⬜
+         * - we can see only one photo at a time -> ⬜⬛⬜⬜⬜⬜⬜
          * - images are the same width
          * - move the first image to the left of its width, moving in turn all block of images
          * - now the first one is hide, and the second one is visible
@@ -174,12 +226,14 @@ var view = {
          * - if the last photo position is  visible (we check that in that way: if its left position is equal to the left position of slider) 
          *    move the first photo to the initial position 
          * - how do on resize? -> stop animation! 
+         * - how do on botton clicked? -> very hard
          */
         
         var numberOfImages = imgs.length;
         
         /*get first and last image */
-        var $firstSort = $('#0-sort');
+        view.$firstSort = $('#0-sort');
+        var $firstSort = view.$firstSort;
         var $lastSort = $('#' + (numberOfImages-1) + '-sort');
         
         /*get the current lenght of slider, the same of images*/
@@ -191,19 +245,26 @@ var view = {
         /*get the current window width*/
         var sliderLeftPosition = $('.carousel').position().left;
         
+        /*is not ok? cut*/
+        if(!view.isItOkToAnimate) {
+            $firstSort.stop();
+            return;
+        }
+        
         /*if the last photo is visible with 15px of accuration*/
         if(lastPosLeft < sliderLeftPosition + 15){
             /*move, without animate, the first image to the initial position*/
             $firstSort.css('margin-left', 0 );                 
         }
         
-        /*on resize*/
+        /*while windows is on resize*/
         $(window).resize(function() {
-            /*this is a great implementation finded here 
-             *      -> http://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac*/
+            /*this is a great hack finded here 
+             *      -> http://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac
+             *for stop animation when resize is checked*/
             clearTimeout(window.resizedFinished);
             window.resizedFinished = setTimeout(function(){
-                view.animate();
+                view.animateCarousel();
             }, 50);
             
             /*stop animation*/
@@ -216,9 +277,21 @@ var view = {
         });
         
         /*wait before animate*/
-        $firstSort.delay(controller.get_timer());
-        /*finally animate*/
-        $firstSort.animate({marginLeft: "-=" + lenghtOfSlider}, "med", view.animate);
+        $firstSort.delay(controller.get_timer())
+                  .queue(function(next){  
+                      view.isItOkToAnimate = false; 
+                      next();
+                   });
+        
+        /*now we can animate*/
+        /*but wait for finish animation before unlock, with a callback function*/
+        $firstSort.animate({marginLeft: "-=" + lenghtOfSlider}, "med", function(){
+            /*afeter finished this animate, call that callback:
+             * free FLAGS and restart*/
+            view.isItOkToAnimate = true;
+            view.isJustClicked = false;
+            view.animateCarousel();
+        });
         
         /*adapt the title and description label for current image*/
         view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lenghtOfSlider));
