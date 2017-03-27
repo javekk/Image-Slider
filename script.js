@@ -101,7 +101,7 @@ var controller = {
 var view = {
     
     /*FLAGS*/
-    isItOkToAnimate : true ,
+    isntAnimationNow: true ,
     isJustClicked : false,
     
     /*this is the object that managed the animation*/
@@ -153,7 +153,7 @@ var view = {
          * if I CAN'T is because the traslation is in progress,
          * if I CAN is because the delay time is in progress*/
         $leftArrow.click(function(){
-            if(!view.isItOkToAnimate) {
+            if(!view.isntAnimationNow) {
                 return;
             }
             view.onClickArrow('l');
@@ -175,6 +175,16 @@ var view = {
         $rightArrow.css('text-align','left');
         $rightArrow.css('color', 'red' );
         
+        /*-------onClick left button------, first i check if I can do that, 
+         * if I CAN'T is because the traslation is in progress,
+         * if I CAN is because the delay time is in progress*/
+        $rightArrow.click(function(){
+            if(!view.isntAnimationNow) {
+                return;
+            }
+            view.onClickArrow('r');
+        });
+        
         /*let's animate*/
         view.animateCarousel();
     } ,
@@ -184,32 +194,88 @@ var view = {
         
         /*ALGORITH with words: 
          * - check if I just clicked
-         * - set the flags that I just clicked ì
+         * - set the flags that I just clicked, I cant clicked until animation is finished
          * -  
-         * - LEFT CASE: easy, stop the animation, stop() function allow animateCarousel function finish and so DO THE LAST TRANSITION(we are in
-         *   the delay time,we CAN'T call this function in the traslation time) that is after the delay time in our implemetation. 
-         *   So we use that transition as our trasition left
+         * - LEFT CASE: easy, stop the animation, stop(), stop()->Stop the currently-running animation on the matched elements. That it is delay,
+         *              we CANT call this function, in the transiton time, so we stop delay and trigger the transition advance.
+         *              FLAG ijustClicked is unlocked after the transition in animateCarousel function
+         * - RIGHT CASE: let me die...
+         *               QUEUE party -> 1. replace the current queue with the right direction animation
+         *                              2. enqueue the function that change labels, and recall animateCarousel in the end
+         *                              3. if the first image is dysplayed, we must replace it with last one (should be equal.....)
          */
         
         if(view.isJustClicked){
             return;
         }
         
+        /*lock another click while transition is present
+         *it will be unlock will the transition will be finished in the animateCarousel() for left shift
+         *it will be unlock will the transition will be finished in the queue manipaltion after the right transition*/
         view.isJustClicked = true;
         
         view.$firstSort = $('#0-sort');
         var $firstSort = view.$firstSort;
         
-        //view.isItOkToAnimate = false; 
-        /* so we must set the flag to false*/
-        $firstSort.stop();
-        
         /*left case*/
-        if(direction == 'l'){
-            /*just re-animate*/         
-            view.isItOkToAnimate = true; 
-            view.animateCarousel();
-        }    
+        if(direction == 'l'){     
+            $firstSort.stop();
+        }
+        /*right case*/
+        else if(direction == 'r'){  
+            /*falg to stop animation and than stop delay, the slider will be temporarily stopped*/
+            
+            view.isntAnimationNow = false;
+            var numberOfImages = controller.get_image_number();
+            
+            var $lastSort = $('#' + (numberOfImages-1) + '-sort');
+
+            /*get the current lenght of slider, the same of images*/
+            var lengthOfSlider = $firstSort.width();
+
+            /*get the current position of the last photo*/
+            var lastPosLeft = $lastSort.position().left;
+
+            /*get the current window width*/
+            var sliderLeftPosition = $('.carousel').position().left;
+            
+            /*if first image is visible we replace it with last one, their should be equal..................must be
+             * for do it we move slider back for totallength less sliderlength*/
+            if(view.getCurrentImage(lastPosLeft,lengthOfSlider) == 0){
+                /*move, without animate, the first image to the initial position*/
+                $firstSort.css('margin-left', -((lengthOfSlider*numberOfImages)-lengthOfSlider));                 
+            }
+            
+            
+            /*queueueueueueueueu manipolation
+             * first stop the delay in the animateCarousel funtion
+             * animate rightward*/
+            $firstSort.queue( [function(){
+                        $firstSort.stop();
+                        $firstSort.animate({marginLeft: "+=" + lengthOfSlider}, "med", function(){
+                            /*return if I clicked one of the r button, because it stop the animation*/
+                            lastPosLeftastPosLeft = $lastSort.position().left;
+                            /*adapt the title and description label for current image*/
+
+                            view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
+                            /*afeter finished this animate, call that callback:
+                             * free FLAGS and restart*/
+                            view.isntAnimationNow = true;
+                            view.isJustClicked = false;
+                        });
+            }]);
+            
+            /*these functions are enqueue, so it will run after the animate rightward
+             *in this function: 1. fix labels,
+             *                  2. unlock flags
+             *                  3. finally animate*/
+            $firstSort.queue(function(){
+                view.animateCarousel();
+            });
+                
+            
+        }
+        
     } ,
     
     
@@ -229,7 +295,7 @@ var view = {
          * - how do on botton clicked? -> very hard
          */
         
-        var numberOfImages = imgs.length;
+        var numberOfImages = controller.get_image_number();
         
         /*get first and last image */
         view.$firstSort = $('#0-sort');
@@ -237,7 +303,7 @@ var view = {
         var $lastSort = $('#' + (numberOfImages-1) + '-sort');
         
         /*get the current lenght of slider, the same of images*/
-        var lenghtOfSlider = $firstSort.width();
+        var lengthOfSlider = $firstSort.width();
         
         /*get the current position of the last photo*/
         var lastPosLeft = $lastSort.position().left;
@@ -246,8 +312,7 @@ var view = {
         var sliderLeftPosition = $('.carousel').position().left;
         
         /*is not ok? cut*/
-        if(!view.isItOkToAnimate) {
-            $firstSort.stop();
+        if(!view.isntAnimationNow) {
             return;
         }
         
@@ -264,7 +329,7 @@ var view = {
              *for stop animation when resize is checked*/
             clearTimeout(window.resizedFinished);
             window.resizedFinished = setTimeout(function(){
-                view.isItOkToAnimate = true;
+                view.isntAnimationNow = true;
                 view.isJustClicked = false;
                 view.animateCarousel();
             }, 500);
@@ -275,28 +340,30 @@ var view = {
             $firstSort.css('margin-left', 0 );
             
             /*adapt the title and description label for current image*/
-            view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lenghtOfSlider));
+            view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
         });
         
         /*wait before animate*/
         $firstSort.delay(controller.get_timer())
                   .queue(function(next){  
-                      view.isItOkToAnimate = false; 
+                      /*return if I clicked one of the r button, because it stop the animation*/
+                      if(!view.isntAnimationNow) return;
+                      view.isntAnimationNow = false; 
                       next();
                    });
         
         /*now we can animate*/
         /*but wait for finish animation before unlock, with a callback function*/
-        $firstSort.animate({marginLeft: "-=" + lenghtOfSlider}, "med", function(){
+        $firstSort.animate({marginLeft: "-=" + lengthOfSlider}, "med", function(){
             /*afeter finished this animate, call that callback:
              * free FLAGS and restart*/
-            view.isItOkToAnimate = true;
+            view.isntAnimationNow = true;
             view.isJustClicked = false;
             view.animateCarousel();
         });
         
         /*adapt the title and description label for current image*/
-        view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lenghtOfSlider));
+        view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
      
     } ,
     
@@ -312,9 +379,9 @@ var view = {
     } ,
     
     
-    getCurrentImage : function (lastPosLeft, lenghtOfSlider) {
+    getCurrentImage : function (lastPosLeft, lengthOfSlider) {
         
-        var totalLenght = controller.get_image_number() * lenghtOfSlider;
+        var totalLenght = controller.get_image_number() * lengthOfSlider;
         
          /* we have this:
          *  
@@ -335,7 +402,7 @@ var view = {
          *       SO ⤇ [X = (T-Y)/t] 
          *       (-1? -> Array....)
          **/
-        var currentImage = (( totalLenght - lastPosLeft ) / lenghtOfSlider) - 1;
+        var currentImage = (( totalLenght - lastPosLeft ) / lengthOfSlider) - 1;
         
         return currentImage;
     }
