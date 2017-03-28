@@ -221,9 +221,11 @@ var view = {
         
         /*why -1? because first and last one image are the same*/
         for(var i = 0; i < numberOfImages-1; i++){
-            $buttonContainer.append('<img class="btn-choosen img-responsive" src="' + controller.get_btn_controll_src() + '" id="' + i + '-btn"></img>');
+            $buttonContainer.append('<img class="btn-choosen img-circle" src="' + controller.get_btn_controll_src() + '" id="' + i + '-btn"></img>');
             var curBtn = $('#' + i + '-btn');
         }
+        
+        /*change opacity on hover*/
         
         /*add the ------RIGHT ARROW------ and its onClick function*/
         $upperRow.append('<div class="over col-md-1 col-xs-1 col-md-offset-11 col-xs-offset-11" id="rightArrow"><h2 class="btn">▶</h2S></div>');
@@ -479,8 +481,8 @@ var view = {
         /* set all button's opacity to 0.6 and then change the current to 0.9*/
         var $cur = $('#' + numberOfCurrentImage + '-btn');
         var $all = $('.btn-choosen');
-        $all.css('opacity', 0.6);
-        $cur.css('opacity', 0.9);
+        $all.css('border', 'none');
+        $cur.css('border', 'solid 0.1px transparent');
     }
     
     
