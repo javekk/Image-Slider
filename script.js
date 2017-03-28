@@ -200,9 +200,11 @@ var view = {
          *              we CANT call this function, in the transiton time, so we stop delay and trigger the transition advance.
          *              FLAG ijustClicked is unlocked after the transition in animateCarousel function
          * - RIGHT CASE: let me die...
-         *               QUEUE party -> 1. replace the current queue with the right direction animation
-         *                              2. enqueue the function that change labels, and recall animateCarousel in the end
-         *                              3. if the first image is dysplayed, we must replace it with last one (should be equal.....)
+         *               QUEUE party -> 1. stop the delay
+         *                              2. frees the queueuee of functions
+         *                              3. animate right to the right
+         *                              4. in the callback set the right labels and recall animateCarousel()
+         *                              NB. if the first image is dysplayed, we must replace it with last one (should be equal.....)
          */
         
         if(view.isJustClicked){
@@ -242,38 +244,30 @@ var view = {
             /*if first image is visible we replace it with last one, their should be equal..................must be
              * for do it we move slider back for totallength less sliderlength*/
             if(view.getCurrentImage(lastPosLeft,lengthOfSlider) == 0){
-                /*move, without animate, the first image to the initial position*/
+                /*move the last image in the dysplayed area:
+                 * if the first image is displaye -┬-> ⬛⬜⬜⬜⬜⬜⬜
+                 *                                 └-> move block of images without animation -> ⬜⬜⬜⬜⬜⬜⬛ */
                 $firstSort.css('margin-left', -((lengthOfSlider*numberOfImages)-lengthOfSlider));                 
             }
-            
+    
             
             /*queueueueueueueueu manipolation
-             * first stop the delay in the animateCarousel funtion
-             * animate rightward*/
-            $firstSort.queue( [function(){
-                        $firstSort.stop();
-                        $firstSort.animate({marginLeft: "+=" + lengthOfSlider}, "med", function(){
-                            /*return if I clicked one of the r button, because it stop the animation*/
-                            lastPosLeftastPosLeft = $lastSort.position().left;
-                            /*adapt the title and description label for current image*/
+             *   1-> stop() delay*/
+            $firstSort.stop();
+            /*2-> frees queue*/
+            $firstSort.queue([]);
+            $firstSort.animate({marginLeft: "+=" + lengthOfSlider}, "med", function(){
+                /*return if I clicked one of the r button, because it stop the animation*/
+                lastPosLeftastPosLeft = $lastSort.position().left;
+                /*adapt the title and description label for current image*/
+                /*afeter finished this animate, call that callback:
+                 * free FLAGS and restart*/
+                view.isntAnimationNow = true;
+                view.isJustClicked = false;
 
-                            view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
-                            /*afeter finished this animate, call that callback:
-                             * free FLAGS and restart*/
-                            view.isntAnimationNow = true;
-                            view.isJustClicked = false;
-                        });
-            }]);
-            
-            /*these functions are enqueue, so it will run after the animate rightward
-             *in this function: 1. fix labels,
-             *                  2. unlock flags
-             *                  3. finally animate*/
-            $firstSort.queue(function(){
-                view.animateCarousel();
-            });
-                
-            
+                 view.animateCarousel();
+                view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
+             });        
         }
         
     } ,
