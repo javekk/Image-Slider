@@ -33,3 +33,15 @@
     vertical-align: middle;
     text-align: center;
 }
+
+#buttonContainer{
+    text-align: center;
+}
+
+.btn-choosen{
+    display: inline;
+    width: 2%;
+    max-width: 2%;
+    margin: 2px;
+    
+}

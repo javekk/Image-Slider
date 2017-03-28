@@ -40,10 +40,11 @@ var imgs = [
     } ,
 ];
 
+var btn_controll_src = "img/blackcircle.png";
 
 
 /*--------------------┏━━━━┓┏━━━━┓--┏━━━━━━━┓--┏━━━━┓---┏━━━━━━┓--┏━┓------------------*/
-/*--------------------┃ ┏┓ ┃┃-┏┓ ┃--┃ ┏━━━┓ ┃--┃ ┏┓ ┗┓--┃ ┏━━━━┛--┃ ┃------------------*/
+/*--------------------┃ ┏┓ ┃┃ ┏┓ ┃--┃ ┏━━━┓ ┃--┃ ┏┓ ┗┓--┃ ┏━━━━┛--┃ ┃------------------*/
 /*--------------------┃ ┃┃ ┃┃ ┃┃ ┃--┃ ┃---┃ ┃--┃ ┃┗┓ ┃--┃ ┗━━━━┓--┃ ┃------------------*/
 /*--------------------┃ ┃┃ ┃┃ ┃┃ ┃--┃ ┃---┃ ┃--┃ ┃┏┛ ┃--┃ ┏━━━━┛--┃ ┃------------------*/
 /*--------------------┃ ┃┃ ┗┛ ┃┃ ┃--┃ ┗━━━┛ ┃--┃ ┗┛ ┏┛--┃ ┗━━━━┓--┃ ┗━━━━━┓------------*/
@@ -74,12 +75,16 @@ var model = {
     
     get_description : function(numberOfImg){
         return imgs[numberOfImg].description;
+    } ,
+    
+    get_btn_controll_src(){
+        return btn_controll_src;
     }
 }
 
 
 /*--------------------┏━━━━━━━┓--┏━━━━━━━┓--┏━━━━┓┏━┓--┏━━━━━━━┓--┏━━━━━━┓--┏━━━━━━━┓--┏━┓------------------*/
-/*--------------------┃ ┏━━━━━┛--┃ ┏━━━┓ ┃--┃ ┏┓ ┃┃-┃--┗━━┓ ┏━━┛--┃ ┏━━┓ ┃--┃ ┏━━━┓ ┃--┃ ┃------------------*/
+/*--------------------┃ ┏━━━━━┛--┃ ┏━━━┓ ┃--┃ ┏┓ ┃┃ ┃--┗━━┓ ┏━━┛--┃ ┏━━┓ ┃--┃ ┏━━━┓ ┃--┃ ┃------------------*/
 /*--------------------┃ ┃--------┃ ┃---┃ ┃--┃ ┃┃ ┃┃ ┃-----┃ ┃-----┃ ┗━━┛ ┃--┃ ┃---┃ ┃--┃ ┃------------------*/
 /*--------------------┃ ┃--------┃ ┃---┃ ┃--┃ ┃┃ ┃┃ ┃-----┃ ┃-----┃ ┏━┓ ┏┛--┃ ┃---┃ ┃--┃ ┃------------------*/
 /*--------------------┃ ┗━━━━━┓--┃ ┗━━━┛ ┃--┃ ┃┃ ┗┛ ┃-----┃ ┃-----┃ ┃-┗┓┗┓--┃ ┗━━━┛ ┃--┃ ┗━━━━━┓------------*/
@@ -112,13 +117,17 @@ var controller = {
     
     get_image_number(){
         return model.imgsNumber;
+    } ,
+    
+    get_btn_controll_src(){
+        return model.get_btn_controll_src();
     }
 }
 
 /*--------------------┏━┓---┏━┓--┏━┓--┏━━━━━━┓--┏━┓-----┏━┓--------------------------------*/
-/*--------------------┃ ┃---┃-┃--┃ ┃--┃ ┏━━━━┛--┃ ┃-----┃ ┃--------------------------------*/
-/*--------------------┃ ┃---┃-┃--┃ ┃--┃ ┗━━━━┓--┃ ┃-----┃ ┃--------------------------------*/
-/*--------------------┃ ┃---┃-┃--┃ ┃--┃ ┏━━━━┛--┃ ┃-┏━┓-┃ ┃--------------------------------*/
+/*--------------------┃ ┃---┃ ┃--┃ ┃--┃ ┏━━━━┛--┃ ┃-----┃ ┃--------------------------------*/
+/*--------------------┃ ┃---┃ ┃--┃ ┃--┃ ┗━━━━┓--┃ ┃-----┃ ┃--------------------------------*/
+/*--------------------┃ ┃---┃ ┃--┃ ┃--┃ ┏━━━━┛--┃ ┃-┏━┓-┃ ┃--------------------------------*/
 /*--------------------┃ ┗━━━┛ ┃--┃ ┃--┃ ┗━━━━┓--┃ ┗━┛ ┗━┛ ┃--------------------------------*/
 /*--------------------┗━━━━━━━┛--┗━┛--┗━━━━━━┛--┗━━━━━━━━━┛--------------------------------*/
 var view = {
@@ -134,13 +143,16 @@ var view = {
     
     init : function() {
         
-        /*Insert labels for title and description containers with is position 
+        /* Some GUI settings
          *
-         * this is our tree:
+         * this is the main GUI tree:
+         *
          * SLIDERCONTAINER ┬-> SLIDER -> IMAGES
-         *                 └-> upperRow ┬-> arrow l
-         *                              ├-> labels
-         *                              └-> arrow r
+         *                 └-> upperRow ┬-> arrow left
+         *                              ├-> secondLevel ┬-> labrow -> labels
+         *                              │               └-> btnrow -> buttons 
+         *                              └-> arrow right
+         *
          * here we create label container with is css, and add decription of first photos
          */
         var $slider = $('.carousel');
@@ -150,7 +162,8 @@ var view = {
         /*get the size of our slider*/
         $sliderContainer.addClass(controller.get_slider_dims_class);
         
-        /*add IMGS in the carousel*/
+        /*    -----SLIDER-----
+         * add IMGS in the carousel*/
         for(var i = 0; i < numberOfImages; i++){
             /*add with three specs:
              * -class -> pics
@@ -171,7 +184,7 @@ var view = {
         $leftArrow.css('text-align', 'right');
         $leftArrow.css('color', 'red' );
         
-        /*-------onClick left button------, first i check if I can do that, 
+        /*onClick left button, first i check if I can do that, 
          * if I CAN'T is because the traslation is in progress,
          * if I CAN is because the delay time is in progress*/
         $leftArrow.click(function(){
@@ -181,13 +194,35 @@ var view = {
             view.onClickArrow('l');
         });
         
+        /*         -----SECOND LEVELELELELELEL of Rows------
+         *  secondLevel ┬-> labelsRow -> labelContainer  
+         *              └-> btnsRow -> buttonContainer 
+         * WHy? because we want fix their horizontal
+         */
+        $upperRow.append('<div class="over col-md-10 col-xs-10 col-md-offset-1 col-xs-offset-1" id="secondLevel"></div>');
+        var $secondLevel = $('#secondLevel');
+        $secondLevel.css('top', '93%');
+        
         /*add the -----LABELS------*/
-        $upperRow.append('<div class="over jumbotron col-md-10 col-xs-10 col-md-offset-1 col-xs-offset-1" id="labelContainer"></div>');
+        $secondLevel.append('<div class="row" id="labelsRow"></div>');
+        var $labelsRow = $('#labelsRow');
+        $labelsRow.append('<div class="over jumbotron col-md-11 col-xs-11 col-md-offset-1 col-xs-offset-1" id="labelContainer"></div>');
         var $labelContainer = $('#labelContainer');
         $labelContainer.css('bottom', -20 ); 
         $labelContainer.css('color', 'red' ); 
         $labelContainer.append('<h1 id="title">' + controller.get_title(0) + '</h1>');
         $labelContainer.append('<p id="description">' + controller.get_description(0) + '</p>');
+        
+        /*-----Bububububuttons------*/
+        $secondLevel.append('<div class="row" id="btnsRow"></div>');
+        var $btnsRow= $('#btnsRow');
+        $btnsRow.append('<div class="over jumbotron col-md-12 col-xs-12 " id="buttonContainer"></div>');
+        var $buttonContainer = $('#buttonContainer');
+        
+        for(var i = 0; i < numberOfImages; i++){
+            $buttonContainer.append('<img class="btn-choosen img-responsive" src="' + controller.get_btn_controll_src() + '" id="' + i + '-btn"></img>');
+            var curBtn = $('#' + i + '-btn');
+        }
         
         /*add the ------RIGHT ARROW------ and its onClick function*/
         $upperRow.append('<div class="over col-md-1 col-xs-1 col-md-offset-11 col-xs-offset-11" id="rightArrow"><h2 class="btn">▶</h2S></div>');
@@ -197,7 +232,7 @@ var view = {
         $rightArrow.css('text-align','left');
         $rightArrow.css('color', 'red' );
         
-        /*-------onClick left button------, first i check if I can do that, 
+        /*-onClick right button, first i check if I can do that, 
          * if I CAN'T is because the traslation is in progress,
          * if I CAN is because the delay time is in progress*/
         $rightArrow.click(function(){
