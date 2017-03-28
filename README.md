@@ -9,5 +9,5 @@ requirements:
 * Responsive ☑
 * Arbitrary number of images ☑
 * labels ☑
-* Skip left/right bottons
+* Skip left/right bottons  ☑
 * Choosen image bottons
