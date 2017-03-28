@@ -287,9 +287,9 @@ var view = {
                  * free FLAGS and restart*/
                 view.isntAnimationNow = true;
                 view.isJustClicked = false;
-
-                 view.animateCarousel();
+                
                 view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
+                view.animateCarousel();
              });        
         }
         
