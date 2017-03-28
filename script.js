@@ -80,7 +80,7 @@ var model = {
     get_btn_controll_src(){
         return btn_controll_src;
     }
-}
+};
 
 
 /*--------------------┏━━━━━━━┓--┏━━━━━━━┓--┏━━━━┓┏━┓--┏━━━━━━━┓--┏━━━━━━┓--┏━━━━━━━┓--┏━┓------------------*/
@@ -122,7 +122,7 @@ var controller = {
     get_btn_controll_src(){
         return model.get_btn_controll_src();
     }
-}
+};
 
 /*--------------------┏━┓---┏━┓--┏━┓--┏━━━━━━┓--┏━┓-----┏━┓--------------------------------*/
 /*--------------------┃ ┃---┃ ┃--┃ ┃--┃ ┏━━━━┛--┃ ┃-----┃ ┃--------------------------------*/
@@ -219,7 +219,8 @@ var view = {
         $btnsRow.append('<div class="over jumbotron col-md-12 col-xs-12 " id="buttonContainer"></div>');
         var $buttonContainer = $('#buttonContainer');
         
-        for(var i = 0; i < numberOfImages; i++){
+        /*why -1? because first and last one image are the same*/
+        for(var i = 0; i < numberOfImages-1; i++){
             $buttonContainer.append('<img class="btn-choosen img-responsive" src="' + controller.get_btn_controll_src() + '" id="' + i + '-btn"></img>');
             var curBtn = $('#' + i + '-btn');
         }
@@ -372,7 +373,8 @@ var view = {
         /*if the last photo is visible with 15px of accuration*/
         if(lastPosLeft < sliderLeftPosition + 15){
             /*move, without animate, the first image to the initial position*/
-            $firstSort.css('margin-left', 0 );                 
+            
+            $firstSort.css('margin-left', 0 );    
         }
         
         /*while windows is on resize*/
@@ -394,6 +396,8 @@ var view = {
             
             /*adapt the title and description label for current image*/
             view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
+            
+            view.changeOpacity(currentImageNumber);
         });
         
         /*wait before animate*/
@@ -416,7 +420,14 @@ var view = {
         });
         
         /*adapt the title and description label for current image*/
-        view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
+        var currentImageNumber = view.getCurrentImage(lastPosLeft, lengthOfSlider);
+        
+        if(currentImageNumber == numberOfImages-1) 
+            view.changeOpacity(0);
+        else 
+            view.changeOpacity(currentImageNumber);
+        
+        view.adaptLabelContainer(currentImageNumber);
      
     } ,
     
@@ -460,10 +471,21 @@ var view = {
         var currentImage = (( totalLenght - lastPosLeft ) / lengthOfSlider) - 1;
         
         return currentImage;
+    } ,
+    
+    
+    
+    changeOpacity : function(numberOfCurrentImage){
+        /* set all button's opacity to 0.6 and then change the current to 0.9*/
+        var $cur = $('#' + numberOfCurrentImage + '-btn');
+        var $all = $('.btn-choosen');
+        $all.css('opacity', 0.6);
+        $cur.css('opacity', 0.9);
     }
     
     
-}
+    
+};
 
 
 /*----------------------------------------Let's go----------------------------------------*/

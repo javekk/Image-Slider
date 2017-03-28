@@ -43,5 +43,9 @@
     width: 2%;
     max-width: 2%;
     margin: 2px;
-    
+    opacity: 0.6;
+}
+
+.btn-choosen:hover{
+    opacity: 0.9;
 }
