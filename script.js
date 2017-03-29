@@ -57,8 +57,8 @@ var btns = {
 
 var arrows = {
     is_visibile : true ,
-    right_way_arrow_src : "img/right_way_to_heaven.png",
-    left_way_arrow_src : "img/left_way_to_heaven.png"
+    right_way_arrow_src : "img/right.png",
+    left_way_arrow_src : "img/left.png"
 };
 
 var labels = {
@@ -679,7 +679,7 @@ var view = {
         var $cur = $('#' + numberOfCurrentImage + '-btn');
         var $all = $('.btn-choosen');
         $all.css('border', 'none');
-        $cur.css('border', 'solid 0.1px transparent');
+        $cur.css('border', 'solid 3px transparent');
     }
     
     
