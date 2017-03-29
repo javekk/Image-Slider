@@ -78,7 +78,7 @@ var model = {
     
     /* slider dimensions, set in the init function, we use BOOTSTRAP for responsive dims, so this type is string
      *   @TODO: choose one here -> http://getbootstrap.com/css/#grid-options, we use full-screen */
-    slClassSize: "col-md-6 col-xs-12 col-md-offset-3",
+    slClassSize: "col-md-10 col-xs-12 col-md-offset-1",
     
     /*set in the init function*/
     imgsNumber : 0 ,
@@ -272,8 +272,8 @@ var view = {
                          +   '<img class="img-responsive arrow-left" src="' + controller.get_left_btn_src() + '"></img>'
                          +'</div> ');
         var $leftArrow = $('#leftArrow');
-        $leftArrow.css('top', '40%');
-        $leftArrow.css('bottom', '60%');
+        $leftArrow.css('top', '45%');
+        $leftArrow.css('bottom', '55%');
         $leftArrow.css('text-align', 'right');
         $leftArrow.css('display', 'block');
         
@@ -329,8 +329,8 @@ var view = {
                          +   '<img class="img-responsive arrow-right" src="' + controller.get_right_btn_src() + '"></img>'
                          +'</div> ');
         var $rightArrow = $('#rightArrow');
-        $rightArrow.css('top', '40%');
-        $rightArrow.css('bottom', '60%');
+        $rightArrow.css('top', '45%');
+        $rightArrow.css('bottom', '55%');
         $rightArrow.css('text-align','left');
         $leftArrow.css('display', 'block');
         
@@ -669,7 +669,7 @@ var view = {
          **/
         var currentImage = (( totalLenght - lastPosLeft ) / lengthOfSlider) - 1;
         
-        return currentImage;
+        return Math.round(currentImage);
     } ,
     
     
