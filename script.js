@@ -40,8 +40,6 @@ var imgs = [
     } ,
 ];
 
-var btn_controll_src = "img/blackcircle.png";
-
 
 /*--------------------┏━━━━┓┏━━━━┓--┏━━━━━━━┓--┏━━━━┓---┏━━━━━━┓--┏━┓------------------*/
 /*--------------------┃ ┏┓ ┃┃ ┏┓ ┃--┃ ┏━━━┓ ┃--┃ ┏┓ ┗┓--┃ ┏━━━━┛--┃ ┃------------------*/
@@ -49,10 +47,34 @@ var btn_controll_src = "img/blackcircle.png";
 /*--------------------┃ ┃┃ ┃┃ ┃┃ ┃--┃ ┃---┃ ┃--┃ ┃┏┛ ┃--┃ ┏━━━━┛--┃ ┃------------------*/
 /*--------------------┃ ┃┃ ┗┛ ┃┃ ┃--┃ ┗━━━┛ ┃--┃ ┗┛ ┏┛--┃ ┗━━━━┓--┃ ┗━━━━━┓------------*/
 /*--------------------┗━┛┗━━━━┛┗━┛--┗━━━━━━━┛--┗━━━━┛---┗━━━━━━┛--┗━━━━━━━┛------------*/
+
+/*SOME GENERALSETTINGS */
+
+var btns = {
+    is_visible : true ,
+    btn_controll_src : "img/blackcircle.png"
+};
+
+var arrows = {
+    is_visibile : true ,
+    right_way_arrow_src : "img/right_way_to_heaven.png",
+    left_way_arrow_src : "img/left_way_to_heaven.png"
+};
+
+var labels = {
+    is_title_visible : true ,
+    is_description_visible : true ,
+    title_color : "black",
+    description_color : "red"
+}
+
 var model = {
     
     /*timeout of display per pic, mS*/
     timer : 2000 ,
+    
+    /*set in the init function*/
+    currentArrayOfImageObject  :  null,
     
     /* slider dimensions, set in the init function, we use BOOTSTRAP for responsive dims, so this type is string
      *   @TODO: choose one here -> http://getbootstrap.com/css/#grid-options, we use full-screen */
@@ -62,23 +84,60 @@ var model = {
     imgsNumber : 0 ,
 
     init : function(){
-        this.imgsNumber = imgs.length;
+        /*We could have more than one Array, here we can fetch one, or we can fetch more and next merge their*/
+        this.currentArrayOfImageObject = imgs;
+        
+        /*set the number of images*/
+        this.imgsNumber = this.currentArrayOfImageObject.length;
+        
     } ,
     
     get_src : function(numberOfImg){
-        return imgs[numberOfImg].src;
+        return this.currentArrayOfImageObject[numberOfImg].src;
     } ,
     
     get_title : function(numberOfImg){
-        return imgs[numberOfImg].title;
+        return this.currentArrayOfImageObject[numberOfImg].title;
     } ,
     
     get_description : function(numberOfImg){
-        return imgs[numberOfImg].description;
+        return this.currentArrayOfImageObject[numberOfImg].description;
     } ,
     
     get_btn_controll_src(){
-        return btn_controll_src;
+        return btns.btn_controll_src;
+    } ,
+    
+    get_right_btn_src(){
+        return arrows.right_way_arrow_src;
+    } ,
+    
+    get_left_btn_src(){
+        return arrows.left_way_arrow_src;
+    } ,
+    
+    get_color_of_title(){
+        return labels.title_color;
+    } ,
+    
+    get_color_of_description(){
+        return labels.description_color;
+    } ,
+    
+    get_arrows_visibility(){
+        return arrows.is_visibile;
+    } ,
+    
+    get_btn_visibility(){
+        return btns.is_visible;
+    } ,
+    
+    get_title_visibility(){
+        return labels.is_title_visible;
+    } ,
+    
+    get_description_visibility(){
+        return labels.is_description_visible;
     }
 };
 
@@ -121,6 +180,38 @@ var controller = {
     
     get_btn_controll_src(){
         return model.get_btn_controll_src();
+    } ,
+    
+    get_right_btn_src(){
+        return model.get_right_btn_src();
+    } ,
+    
+    get_left_btn_src(){
+        return model.get_left_btn_src();
+    } ,
+    
+    get_color_of_title(){
+        return model.get_color_of_title();
+    } ,
+    
+    get_color_of_description(){
+        return model.get_color_of_description();
+    } ,
+    
+    get_arrows_visibility(){
+        return model.get_arrows_visibility();
+    } ,
+    
+    get_btn_visibility(){
+        return model.get_btn_visibility();
+    } ,
+    
+    get_title_visibility(){
+        return model.get_title_visibility();
+    } ,
+    
+    get_description_visibility(){
+        return model.get_description_visibility();
     }
 };
 
@@ -177,12 +268,14 @@ var view = {
         var $upperRow = $('#upperRow');
         
         /*add the -----LEFT ARROW----- and its onClick function*/
-        $upperRow.append('<div class="over col-md-1 col-xs-1" id="leftArrow"><h1 class="btn">◀</h1></div> ');
+        $upperRow.append('<div class="over col-md-1 col-xs-1" id="leftArrow">'
+                         +   '<img class="img-responsive arrow-left" src="' + controller.get_left_btn_src() + '"></img>'
+                         +'</div> ');
         var $leftArrow = $('#leftArrow');
         $leftArrow.css('top', '40%');
         $leftArrow.css('bottom', '60%');
         $leftArrow.css('text-align', 'right');
-        $leftArrow.css('color', 'red' );
+        $leftArrow.css('display', 'block');
         
         /*onClick left button, first i check if I can do that, 
          * if I CAN'T is because the traslation is in progress,
@@ -209,9 +302,10 @@ var view = {
         $labelsRow.append('<div class="over jumbotron col-md-11 col-xs-11 col-md-offset-1 col-xs-offset-1" id="labelContainer"></div>');
         var $labelContainer = $('#labelContainer');
         $labelContainer.css('bottom', -20 ); 
-        $labelContainer.css('color', 'red' ); 
         $labelContainer.append('<h1 id="title">' + controller.get_title(0) + '</h1>');
+        $('#title').css('color', controller.get_color_of_title());
         $labelContainer.append('<p id="description">' + controller.get_description(0) + '</p>');
+        $('#description').css('color', controller.get_color_of_description());
         
         /*-----Bububububuttons------*/
         $secondLevel.append('<div class="row" id="btnsRow"></div>');
@@ -231,12 +325,14 @@ var view = {
         /*change opacity on hover*/
         
         /*add the ------RIGHT ARROW------ and its onClick function*/
-        $upperRow.append('<div class="over col-md-1 col-xs-1 col-md-offset-11 col-xs-offset-11" id="rightArrow"><h2 class="btn">▶</h2S></div>');
+        $upperRow.append('<div class="over col-md-1 col-xs-1 col-md-offset-11 col-xs-offset-11" id="rightArrow">'
+                         +   '<img class="img-responsive arrow-right" src="' + controller.get_right_btn_src() + '"></img>'
+                         +'</div> ');
         var $rightArrow = $('#rightArrow');
         $rightArrow.css('top', '40%');
         $rightArrow.css('bottom', '60%');
         $rightArrow.css('text-align','left');
-        $rightArrow.css('color', 'red' );
+        $leftArrow.css('display', 'block');
         
         /*-onClick right button, first i check if I can do that, 
          * if I CAN'T is because the traslation is in progress,
@@ -247,6 +343,21 @@ var view = {
             }
             view.onClickArrow('r');
         });
+        
+        /*check for visibility*/
+        if(!controller.get_arrows_visibility()){
+            $leftArrow.css('visibility', 'hidden');
+            $rightArrow.css('visibility', 'hidden');
+        }
+        if(!controller.get_btn_visibility()){
+            $buttonContainer.css('visibility', 'hidden');
+        }
+        if(!controller.get_description_visibility()){
+            $('#description').css('visibility', 'hidden');
+        }
+        if(!controller.get_title_visibility()){
+            $('#title').css('visibility', 'hidden');
+        }
         
         /*let's animate*/
         view.animateCarousel();

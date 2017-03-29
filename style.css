@@ -38,6 +38,26 @@
     text-align: center;
 }
 
+.arrow-left{
+    max-width: 50%;
+    margin-left: 50%;
+    opacity: 0.6;
+}
+
+.arrow-left:hover{
+    opacity: 0.9;
+}
+
+.arrow-right{
+    max-width: 50%;
+    margin-right: 50%;
+    opacity: 0.6;
+}
+
+.arrow-right:hover{
+    opacity: 0.9;
+}
+
 .btn-choosen{
     display: inline;
     width: 2%;
