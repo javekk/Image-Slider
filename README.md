@@ -1,5 +1,5 @@
-# Image-Slider WIP
-jQuery Image slider
+# Image-Slider 
+BootStrap Image slider
 
 html-js-jQuery-Bootstrap image slider 
 
@@ -11,4 +11,4 @@ requirements:
 * labels ☑
 * Skip left/right buttons  ☑
 * Choosen image buttons  ☑
-* Customizable things via model/data
+* Customizable things via model/data 30%
