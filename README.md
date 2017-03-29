@@ -10,4 +10,5 @@ requirements:
 * Arbitrary number of images ☑
 * labels ☑
 * Skip left/right bottons  ☑
-* Choosen image bottons
+* Choosen image bottons  ☑
+* Customizable things via model/data
