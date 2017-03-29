@@ -476,6 +476,9 @@ var view = {
             
             /*stop animation*/
             $firstSort.stop();
+            
+            /*2-> frees queue*/
+            $firstSort.queue([]);
             /*move, without animate, the first image to the initial position to avoid bad things*/
             $firstSort.css('margin-left', 0 );
             
