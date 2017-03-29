@@ -9,6 +9,6 @@ requirements:
 * Responsive ☑
 * Arbitrary number of images ☑
 * labels ☑
-* Skip left/right bottons  ☑
-* Choosen image bottons  ☑
+* Skip left/right buttons  ☑
+* Choosen image buttons  ☑
 * Customizable things via model/data
