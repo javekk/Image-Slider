@@ -222,7 +222,10 @@ var view = {
         /*why -1? because first and last one image are the same*/
         for(var i = 0; i < numberOfImages-1; i++){
             $buttonContainer.append('<img class="btn-choosen img-circle" src="' + controller.get_btn_controll_src() + '" id="' + i + '-btn"></img>');
-            var curBtn = $('#' + i + '-btn');
+            var $curBtn = $('#' + i + '-btn');
+            $curBtn.click(function(event){
+               view.onClickButton(event.target.id); 
+            });
         }
         
         /*change opacity on hover*/
@@ -335,6 +338,86 @@ var view = {
     
     
     
+    onClickButton : function(idd){
+        var id = "" + idd; /*????*/
+        
+        /*ALGORITH with words: 
+         * - check if I just clicked
+         * - set the flags that I just clicked, I cant clicked until animation is finished
+         * 
+         * - the same process of that we have done with the right arrow, difference is in how much we move the block
+         * - We have to move the FIRST PHOTO MARGIN LEFT to the right distance 
+         *              we have this:
+         *  
+         *               <- ⬛⬜⬜⬜⬜⬜⬜ 1st photo displayed
+         *                 ⬜⬛⬜⬜⬜⬜⬜  2nd photo displayed
+         *                ⬜⬜⬛⬜⬜⬜⬜   3rd photo displayed
+         *
+         *                  Y = marginLeft of last image
+         *                  T = total lenght of images block 
+         *                  t = image lenght
+         *                  X = current image dysplayed
+         *
+         *                  we KNOW that [Y = T - (t * X)] and [X=(T-Y)/t] --> check we.getCurrentImage() if you don't believe
+         *
+         *                  So we can infer the firstImage marginLeft -> a = Y'-(T-t)
+         *                                                                 with Y' = y when X-th image (X = number of button clicked) is dysplayed 
+         */
+        var $curBtn = $('#' + id);
+        var numberOfBtnClicked = parseInt(id.substr(0));
+        
+         if(view.isJustClicked || !view.isntAnimationNow){
+            return;
+        }
+        
+        view.isJustClicked = true;
+        
+        view.$firstSort = $('#0-sort');
+        var $firstSort = view.$firstSort;
+        
+        
+        view.isntAnimationNow = false;
+        var numberOfImages = controller.get_image_number();
+
+        var $lastSort = $('#' + (numberOfImages-1) + '-sort');
+
+        /*get the current lenght of slider, the same of images*/
+        var lengthOfSlider = $firstSort.width();
+
+        /*get the current position of the last photo*/
+        var lastPosLeft = $lastSort.position().left;
+
+        /*get the current window width*/
+        var sliderLeftPosition = $('.carousel').position().left;
+        
+        /*queueueueueueueueu manipolation
+         *   1-> stop() delay*/
+        $firstSort.stop();
+        /*2-> frees queue*/
+        $firstSort.queue([]);
+        
+        /*Y' = T - (t * x) with x = clicked button number*/
+        var lastPosLeftForBottonClicked = (lengthOfSlider*numberOfImages) - (lengthOfSlider * (numberOfBtnClicked+1));
+        /*a = Y' - (T -t)*/    
+        var newFirstPosLeft = lastPosLeftForBottonClicked - ((lengthOfSlider*numberOfImages) - lengthOfSlider);
+        
+        $firstSort.animate({marginLeft: newFirstPosLeft}, "med" , function(){
+            /*return if I clicked one of the r button, because it stop the animation*/
+            lastPosLeftastPosLeft = $lastSort.position().left;
+            /*adapt the title and description label for current image*/
+            /*afeter finished this animate, call that callback:
+             * free FLAGS and restart*/
+            view.isntAnimationNow = true;
+            view.isJustClicked = false;
+
+            view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
+            view.animateCarousel();
+         });
+        
+    } ,
+    
+    
+    
     animateCarousel : function () {
         
         /*ALGORITH with words: 
@@ -399,7 +482,7 @@ var view = {
             /*adapt the title and description label for current image*/
             view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
             
-            view.changeOpacity(currentImageNumber);
+            view.setRightButton(currentImageNumber);
         });
         
         /*wait before animate*/
@@ -425,9 +508,9 @@ var view = {
         var currentImageNumber = view.getCurrentImage(lastPosLeft, lengthOfSlider);
         
         if(currentImageNumber == numberOfImages-1) 
-            view.changeOpacity(0);
+            view.setRightButton(0);
         else 
-            view.changeOpacity(currentImageNumber);
+            view.setRightButton(currentImageNumber);
         
         view.adaptLabelContainer(currentImageNumber);
      
@@ -477,7 +560,7 @@ var view = {
     
     
     
-    changeOpacity : function(numberOfCurrentImage){
+    setRightButton : function(numberOfCurrentImage){
         /* set all button's opacity to 0.6 and then change the current to 0.9*/
         var $cur = $('#' + numberOfCurrentImage + '-btn');
         var $all = $('.btn-choosen');
