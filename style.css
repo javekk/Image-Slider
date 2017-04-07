@@ -14,15 +14,22 @@
     width: 100%;
     overflow: hidden;
     z-index: 1;
+<<<<<<< HEAD
     display: block; 
     white-space: nowrap;  
+=======
+    display: block;
+    white-space: nowrap;
+    border-style: solid;
+    border-color: black;
+>>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
     font-size: 0;
     padding: 0px;
 }
 
 .over{
     position: absolute;
-    background: rgb(0,0,0,0);
+    background: rgba(0,0,0,0);
     z-index: 2;
     padding: 0px;
 }
