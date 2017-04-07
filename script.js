@@ -68,13 +68,8 @@ var sliderLabels = {
     description_color : "red"
 }
 
-<<<<<<< HEAD
 var sliderModel = {
     
-=======
-var model = {
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
     /*timeout of display per pic, mS*/
     timer : 2000 ,
 
@@ -90,7 +85,7 @@ var model = {
 
     init : function(){
         /*We could have more than one Array, here we can fetch one, or we can fetch more and next merge their*/
-        this.currentArrayOfImageObject = imgs;
+        this.currentArrayOfImageObject = sliderImgs;
 
         /*set the number of images*/
         this.imgsNumber = this.currentArrayOfImageObject.length;
@@ -128,15 +123,9 @@ var model = {
     get_color_of_description(){
         return sliderLabels.description_color;
     } ,
-<<<<<<< HEAD
     
     get_sliderArrows_visibility(){
         return sliderArrows.is_visibile;
-=======
-
-    get_arrows_visibility(){
-        return arrows.is_visibile;
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
     } ,
 
     get_btn_visibility(){
@@ -159,11 +148,8 @@ var model = {
 /*--------------------┃ ┃--------┃ ┃---┃ ┃--┃ ┃┃ ┃┃ ┃-----┃ ┃-----┃ ┏━┓ ┏┛--┃ ┃---┃ ┃--┃ ┃------------------*/
 /*--------------------┃ ┗━━━━━┓--┃ ┗━━━┛ ┃--┃ ┃┃ ┗┛ ┃-----┃ ┃-----┃ ┃-┗┓┗┓--┃ ┗━━━┛ ┃--┃ ┗━━━━━┓------------*/
 /*--------------------┗━━━━━━━┛--┗━━━━━━━┛--┗━┛┗━━━━┛-----┗━┛-----┗━┛--┗━┛--┗━━━━━━━┛--┗━━━━━━━┛------------*/
-<<<<<<< HEAD
+
 var sliderController = {   
-=======
-var controller = {
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
     init : function() {
         sliderModel.init();
         sliderView.init();
@@ -212,15 +198,9 @@ var controller = {
     get_color_of_description(){
         return sliderModel.get_color_of_description();
     } ,
-<<<<<<< HEAD
     
     get_sliderArrows_visibility(){
         return sliderModel.get_sliderArrows_visibility();
-=======
-
-    get_arrows_visibility(){
-        return model.get_arrows_visibility();
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
     } ,
 
     get_btn_visibility(){
@@ -242,13 +222,8 @@ var controller = {
 /*--------------------┃ ┃---┃ ┃--┃ ┃--┃ ┏━━━━┛--┃ ┃-┏━┓-┃ ┃--------------------------------*/
 /*--------------------┃ ┗━━━┛ ┃--┃ ┃--┃ ┗━━━━┓--┃ ┗━┛ ┗━┛ ┃--------------------------------*/
 /*--------------------┗━━━━━━━┛--┗━┛--┗━━━━━━┛--┗━━━━━━━━━┛--------------------------------*/
-<<<<<<< HEAD
-var sliderView = {
-    
-=======
-var view = {
 
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
+var sliderView = {
     /*FLAGS*/
     isntAnimationNow: true ,
     isJustClicked : false,
@@ -266,29 +241,18 @@ var view = {
          *
          * SLIDERCONTAINER ┬-> SLIDER -> IMAGES
          *                 └-> upperRow ┬-> arrow left
-<<<<<<< HEAD
          *                              ├-> secondLevel ┬-> labrow -> sliderLabels
          *                              │               └-> btnrow -> buttons 
-=======
-         *                              ├-> secondLevel ┬-> labrow -> labels
-         *                              │               └-> btnrow -> buttons
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
          *                              └-> arrow right
          *
          * here we create label container with is css, and add decription of first photos
          */
         var $slider = $('.carousel');
         var $sliderContainer = $('.carouselContainer');
-        var numberOfImages = imgs.length;
+        var numberOfImages = sliderController.get_image_number();
 
         /*get the size of our slider*/
-<<<<<<< HEAD
         $sliderContainer.addClass(sliderController.get_slider_dims_class);
-        
-=======
-        $sliderContainer.addClass(controller.get_slider_dims_class);
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
         /*    -----SLIDER-----
          * add sliderImgsin the carousel*/
         for(var i = 0; i < numberOfImages; i++){
@@ -324,19 +288,13 @@ var view = {
         });
 
         /*         -----SECOND LEVELELELELELEL of Rows------
-<<<<<<< HEAD
          *  secondLevel ┬-> sliderLabelsRow -> labelContainer  
          *              └-> sliderBtnsRow -> buttonContainer 
-=======
-         *  secondLevel ┬-> labelsRow -> labelContainer
-         *              └-> btnsRow -> buttonContainer
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
          * WHy? because we want fix their horizontal
          */
         $upperRow.append('<div class="over col-md-10 col-xs-10 col-md-offset-1 col-xs-offset-1" id="secondLevel"></div>');
         var $secondLevel = $('#secondLevel');
         $secondLevel.css('top', '93%');
-<<<<<<< HEAD
         
         /*add the -----sliderLabels------*/
         $secondLevel.append('<div class="row" id="sliderLabelsRow"></div>');
@@ -348,21 +306,6 @@ var view = {
         $('#title').css('color', sliderController.get_color_of_title());
         $labelContainer.append('<p id="description">' + sliderController.get_description(0) + '</p>');
         $('#description').css('color', sliderController.get_color_of_description());
-        
-=======
-
-        /*add the -----LABELS------*/
-        $secondLevel.append('<div class="row" id="labelsRow"></div>');
-        var $labelsRow = $('#labelsRow');
-        $labelsRow.append('<div class="over jumbotron col-md-11 col-xs-11 col-md-offset-1 col-xs-offset-1" id="labelContainer"></div>');
-        var $labelContainer = $('#labelContainer');
-        $labelContainer.css('bottom', -20 );
-        $labelContainer.append('<h1 id="title">' + controller.get_title(0) + '</h1>');
-        $('#title').css('color', controller.get_color_of_title());
-        $labelContainer.append('<p id="description">' + controller.get_description(0) + '</p>');
-        $('#description').css('color', controller.get_color_of_description());
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
         /*-----Bububububuttons------*/
         $secondLevel.append('<div class="row" id="sliderBtnsRow"></div>');
         var $sliderBtnsRow= $('#sliderBtnsRow');
@@ -374,11 +317,7 @@ var view = {
             $buttonContainer.append('<img class="btn-choosen img-circle" src="' + sliderController.get_btn_controll_src() + '" id="' + i + '-btn"></img>');
             var $curBtn = $('#' + i + '-btn');
             $curBtn.click(function(event){
-<<<<<<< HEAD
                sliderView.onClickButton(event.target.id); 
-=======
-               view.onClickButton(event.target.id);
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
             });
         }
 
@@ -418,11 +357,10 @@ var view = {
         if(!sliderController.get_title_visibility()){
             $('#title').css('visibility', 'hidden');
         }
-<<<<<<< HEAD
-        
         
         $(document).focus(function() {
-            
+             sliderView.$firstSort = $('#0-sort');
+            var $firstSort = sliderView.$firstSort;
             var $lastSort = $('#' + (numberOfImages-1) + '-sort');
             var lengthOfSlider = $firstSort.width();  
             var lastPosLeft = $lastSort.position().left;
@@ -453,9 +391,6 @@ var view = {
             
         });
         
-=======
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
         /*let's animate*/
         sliderView.animateCarousel();
     } ,
@@ -478,32 +413,18 @@ var view = {
          *                              4. in the callback set the right sliderLabels and recall animateCarousel()
          *                              NB. if the first image is dysplayed, we must replace it with last one (should be equal.....)
          */
-<<<<<<< HEAD
         
         if(sliderView.isJustClicked){
-=======
-
-        if(view.isJustClicked){
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
             return;
         }
 
         /*lock another click while transition is present
          *it will be unlock will the transition will be finished in the animateCarousel() for left shift
          *it will be unlock will the transition will be finished in the queue manipaltion after the right transition*/
-<<<<<<< HEAD
         sliderView.isJustClicked = true;
         
         sliderView.$firstSort = $('#0-sort');
         var $firstSort = sliderView.$firstSort;
-        
-=======
-        view.isJustClicked = true;
-
-        view.$firstSort = $('#0-sort');
-        var $firstSort = view.$firstSort;
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
         /*left case*/
         if(direction == 'l'){
             $firstSort.stop();
@@ -511,17 +432,9 @@ var view = {
         /*right case*/
         else if(direction == 'r'){
             /*falg to stop animation and than stop delay, the slider will be temporarily stopped*/
-<<<<<<< HEAD
             
             sliderView.isntAnimationNow = false;
             var numberOfImages = sliderController.get_image_number();
-            
-=======
-
-            view.isntAnimationNow = false;
-            var numberOfImages = controller.get_image_number();
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
             var $lastSort = $('#' + (numberOfImages-1) + '-sort');
 
             /*get the current lenght of slider, the same of images*/
@@ -554,21 +467,12 @@ var view = {
                 /*adapt the title and description label for current image*/
                 /*afeter finished this animate, call that callback:
                  * free FLAGS and restart*/
-<<<<<<< HEAD
                 sliderView.isntAnimationNow = true;
                 sliderView.isJustClicked = false;
                 
                 sliderView.adaptLabelContainer(sliderView.getCurrentImage(lastPosLeft, lengthOfSlider));
                 sliderView.animateCarousel();
              });        
-=======
-                view.isntAnimationNow = true;
-                view.isJustClicked = false;
-
-                view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
-                view.animateCarousel();
-             });
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
         }
 
     } ,
@@ -602,7 +506,6 @@ var view = {
          */
         var $curBtn = $('#' + id);
         var numberOfBtnClicked = parseInt(id.substr(0));
-<<<<<<< HEAD
         
          if(sliderView.isJustClicked || !sliderView.isntAnimationNow){
             return;
@@ -616,21 +519,6 @@ var view = {
         
         sliderView.isntAnimationNow = false;
         var numberOfImages = sliderController.get_image_number();
-=======
-
-         if(view.isJustClicked || !view.isntAnimationNow){
-            return;
-        }
-
-        view.isJustClicked = true;
-
-        view.$firstSort = $('#0-sort');
-        var $firstSort = view.$firstSort;
-
-
-        view.isntAnimationNow = false;
-        var numberOfImages = controller.get_image_number();
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
 
         var $lastSort = $('#' + (numberOfImages-1) + '-sort');
 
@@ -686,15 +574,8 @@ var view = {
          * - how do on resize? -> stop animation!
          * - how do on botton clicked? -> very hard
          */
-<<<<<<< HEAD
         
         var numberOfImages = sliderController.get_image_number();
-        
-=======
-
-        var numberOfImages = controller.get_image_number();
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
         /*get first and last image */
         sliderView.$firstSort = $('#0-sort');
         var $firstSort = sliderView.$firstSort;
@@ -732,12 +613,6 @@ var view = {
                 sliderView.isJustClicked = false;
                 sliderView.animateCarousel();
             }, 500);
-<<<<<<< HEAD
-            
-            
-=======
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
             /*stop animation*/
             $firstSort.stop();
 
@@ -747,31 +622,17 @@ var view = {
             $firstSort.css('margin-left', 0 );
 
             /*adapt the title and description label for current image*/
-<<<<<<< HEAD
             sliderView.adaptLabelContainer(sliderView.getCurrentImage(lastPosLeft, lengthOfSlider));
             
             sliderView.setRightButton(currentImageNumber);
-=======
-            view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
-
-            view.setRightButton(currentImageNumber);
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
         });
 
         /*wait before animate*/
-<<<<<<< HEAD
         $firstSort.delay(sliderController.get_timer())
                   .queue(function(next){  
                       /*return if I clicked one of the r button, because it stop the animation*/
                       if(!sliderView.isntAnimationNow) return;
                       sliderView.isntAnimationNow = false; 
-=======
-        $firstSort.delay(controller.get_timer())
-                  .queue(function(next){
-                      /*return if I clicked one of the r button, because it stop the animation*/
-                      if(!view.isntAnimationNow) return;
-                      view.isntAnimationNow = false;
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
                       next();
                    });
 
@@ -786,7 +647,6 @@ var view = {
         });
 
         /*adapt the title and description label for current image*/
-<<<<<<< HEAD
         var currentImageNumber = sliderView.getCurrentImage(lastPosLeft, lengthOfSlider);
         
         if(currentImageNumber == numberOfImages-1) 
@@ -795,18 +655,6 @@ var view = {
             sliderView.setRightButton(currentImageNumber);
         
         sliderView.adaptLabelContainer(currentImageNumber);
-     
-=======
-        var currentImageNumber = view.getCurrentImage(lastPosLeft, lengthOfSlider);
-
-        if(currentImageNumber == numberOfImages-1)
-            view.setRightButton(0);
-        else
-            view.setRightButton(currentImageNumber);
-
-        view.adaptLabelContainer(currentImageNumber);
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
     } ,
 
 
@@ -815,31 +663,15 @@ var view = {
 
         var $title = $('#title');
         var $description = $('#description');
-<<<<<<< HEAD
-        
         $title.text(sliderController.get_title(currentImage));
         $description.text(sliderController.get_description(currentImage));
-        
-=======
-
-        $title.text(controller.get_title(currentImage));
-        $description.text(controller.get_description(currentImage));
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
     } ,
 
 
 
     getCurrentImage : function (lastPosLeft, lengthOfSlider) {
-<<<<<<< HEAD
         
         var totalLenght = sliderController.get_image_number() * lengthOfSlider;
-        
-=======
-
-        var totalLenght = controller.get_image_number() * lengthOfSlider;
-
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
          /* we have this:
          *
          *               <- ⬛⬜⬜⬜⬜⬜⬜ 1st photo displayed
