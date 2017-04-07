@@ -359,6 +359,39 @@ var view = {
             $('#title').css('visibility', 'hidden');
         }
         
+        
+        $(document).focus(function() {
+            
+            var $lastSort = $('#' + (numberOfImages-1) + '-sort');
+            var lengthOfSlider = $firstSort.width();  
+            var lastPosLeft = $lastSort.position().left;
+            /*adapt the title and description label for current image*/
+            /*afeter finished this animate, call that callback:
+            * free FLAGS and restart*/
+            view.isntAnimationNow = true;
+            view.isJustClicked = false;
+
+            view.adaptLabelContainer(view.getCurrentImage(lastPosLeft, lengthOfSlider));
+            view.animateCarousel();
+        });
+
+        $(document).blur(function() {
+
+            view.$firstSort = $('#0-sort');
+            var $firstSort = view.$firstSort;
+
+            view.isJustClicked = true;
+            view.isntAnimationNow = false;
+            /*queueueueueueueueu manipolation
+             *   1-> stop() delay*/
+            $firstSort.stop();
+            /*2-> frees queue*/
+            $firstSort.queue([]);
+
+            $firstSort.css('margin-left', 0 );
+            
+        });
+        
         /*let's animate*/
         view.animateCarousel();
     } ,
@@ -584,6 +617,7 @@ var view = {
                 view.isJustClicked = false;
                 view.animateCarousel();
             }, 500);
+            
             
             /*stop animation*/
             $firstSort.stop();

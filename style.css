@@ -16,8 +16,6 @@
     z-index: 1;
     display: block; 
     white-space: nowrap;  
-    border-style: solid;
-    border-color: black;
     font-size: 0;
     padding: 0px;
 }
