@@ -14,15 +14,12 @@
     width: 100%;
     overflow: hidden;
     z-index: 1;
-<<<<<<< HEAD
     display: block; 
     white-space: nowrap;  
-=======
     display: block;
     white-space: nowrap;
     border-style: solid;
     border-color: black;
->>>>>>> 093d4d51f817c12aaedaad787ac1f6122feab691
     font-size: 0;
     padding: 0px;
 }
@@ -44,7 +41,7 @@
 }
 
 .arrow-left{
-    max-width: 20%;
+    max-width: 35%;
     margin-left: 50%;
     opacity: 0.6;
 }
@@ -54,7 +51,7 @@
 }
 
 .arrow-right{
-    max-width: 20%;
+    max-width: 35%;
     margin-right: 50%;
     opacity: 0.6;
 }
