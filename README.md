@@ -10,12 +10,12 @@ Implements using **MVC** framework
 
 
 requirements:
-[x] Responsive 
-[x] Arbitrary number of images 
-[x] Labels 
-[x] Skip left/right buttons  
-[x] Choose-image buttons  
-[ ] Customizable things via model/data (30%)
+- [x] Responsive 
+- [x] Arbitrary number of images 
+- [x] Labels 
+- [x] Skip left/right buttons  
+- [x] Choose-image buttons  
+- [ ] Customizable things via model/data (30%)
 
 
 ![GitHub Logo](view-1.png)
